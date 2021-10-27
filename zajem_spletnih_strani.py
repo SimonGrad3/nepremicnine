@@ -32,7 +32,6 @@ def vsebina_datoteke(ime_datoteke):
         return datoteka.read()
 
 
-pripravi_imenik("hise-html")
 
 
 
