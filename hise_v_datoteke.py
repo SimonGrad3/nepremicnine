@@ -66,6 +66,9 @@ def izloci_iz_oglasa(oglas):
 def ime_datoteke_slovenija(st_strani):
     return f"hise\hise-slovenija-{st_strani}.html"
 
+def ime_datoteke_hrvaska(st_strani):
+    return f"hise\hise-hrvaska-{st_strani}.html"
+
 hise = []
 
 st = 0
@@ -73,7 +76,18 @@ for st_strani in range(1, 105):
     with open(ime_datoteke_slovenija(st_strani), encoding="utf-8") as dat:
         vsebina = dat.read()
     for zadetek in re.finditer(vzorec_oglasa, vsebina):
-        hise.append(izloci_iz_oglasa(zadetek.group(0)))
+        hisa = izloci_iz_oglasa(zadetek.group(0))
+        hisa["drzava"] = "Slovenija"
+        hise.append(hisa)
+        st += 1
+
+for st_strani in range(1, 54):
+    with open(ime_datoteke_hrvaska(st_strani), encoding="utf-8") as dat:
+        vsebina = dat.read()
+    for zadetek in re.finditer(vzorec_oglasa, vsebina):
+        hisa = izloci_iz_oglasa(zadetek.group(0))
+        hisa["drzava"] = "Hrvaska"
+        hise.append(hisa)
         st += 1
 
 print(st) 
@@ -90,7 +104,8 @@ with open("hise.csv", "w", encoding="utf-8") as dat:
         "nadstropja",
         "povrsina_zemljisca",
         "povrsina_hise",
-        "ima_klet"
+        "ima_klet",
+        "drzava"
     ])
     writer.writeheader()
     writer.writerows(hise)
