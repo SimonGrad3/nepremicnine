@@ -54,6 +54,7 @@ for crka in crke:
         vsebina = dat.read()
     for zadetek in re.finditer(vzorec, vsebina):
         postna = zadetek.groupdict()
+        postna["kraj"] = postna["kraj"].upper()
         postne_stevilke.append(postna)
         
 
