@@ -1,0 +1,690 @@
+<!DOCTYPE html><html lang="sl-SI" prefix="og: https://ogp.me/ns#"><head><meta charset="UTF-8"/>
+<script data-ezscrex='false' data-cfasync='false' data-pagespeed-no-defer>var __ez=__ez||{};__ez.stms=Date.now();__ez.evt={};__ez.script={};__ez.ck=__ez.ck||{};__ez.template={};__ez.template.isOrig=true;__ez.queue=(function(){var count=0,incr=0,items=[],timeDelayFired=false,hpItems=[],lpItems=[],allowLoad=true;var obj={func:function(name,funcName,parameters,isBlock,blockedBy,deleteWhenComplete,proceedIfError){var self=this;this.name=name;this.funcName=funcName;this.parameters=parameters===null?null:(parameters instanceof Array)?parameters:[parameters];this.isBlock=isBlock;this.blockedBy=blockedBy;this.deleteWhenComplete=deleteWhenComplete;this.isError=false;this.isComplete=false;this.isInitialized=false;this.proceedIfError=proceedIfError;this.isTimeDelay=false;this.process=function(){log("... func = "+name);self.isInitialized=true;self.isComplete=true;log("... func.apply: "+name);var funcs=self.funcName.split('.');var func=null;if(funcs.length>3){}else if(funcs.length===3){func=window[funcs[0]][funcs[1]][funcs[2]];}else if(funcs.length===2){func=window[funcs[0]][funcs[1]];}else{func=window[self.funcName];}
+if(typeof func!=='undefined'&&func!==null){func.apply(null,this.parameters);}
+if(self.deleteWhenComplete===true)delete items[name];if(self.isBlock===true){log("----- F'D: "+self.name);processAll();}}},file:function(name,path,isBlock,blockedBy,async,defer,proceedIfError){var self=this;this.name=name;this.path=path;this.async=async;this.defer=defer;this.isBlock=isBlock;this.blockedBy=blockedBy;this.isInitialized=false;this.isError=false;this.isComplete=false;this.proceedIfError=proceedIfError;this.isTimeDelay=false;this.process=function(){self.isInitialized=true;log("... file = "+name);var scr=document.createElement('script');scr.src=path;if(async===true)scr.async=true;else if(defer===true)scr.defer=true;scr.onerror=function(){log("----- ERR'D: "+self.name);self.isError=true;if(self.isBlock===true){processAll();}};scr.onreadystatechange=scr.onload=function(){var state=scr.readyState;log("----- F'D: "+self.name);if((!state||/loaded|complete/.test(state))){self.isComplete=true;if(self.isBlock===true){processAll();}}};document.getElementsByTagName('head')[0].appendChild(scr);}},fileLoaded:function(name,isComplete){this.name=name;this.path="";this.async=false;this.defer=false;this.isBlock=false;this.blockedBy=[];this.isInitialized=true;this.isError=false;this.isComplete=isComplete;this.proceedIfError=false;this.isTimeDelay=false;this.process=function(){};}};function init(){window.addEventListener("load",function(){setTimeout(function(){timeDelayFired=true;log('TDELAY -----');processAll();},5000);},false);}
+function addFile(name,path,isBlock,blockedBy,async,defer,proceedIfError,priority){var item=new obj.file(name,path,isBlock,blockedBy,async,defer,proceedIfError);if(priority===true){hpItems[name]=item}else{lpItems[name]=item}
+items[name]=item;checkIfBlocked(item);}
+function setallowLoad(settobool){allowLoad=settobool}
+function addFunc(name,func,parameters,isBlock,blockedBy,autoInc,deleteWhenComplete,proceedIfError,priority){if(autoInc===true)name=name+"_"+incr++;var item=new obj.func(name,func,parameters,isBlock,blockedBy,deleteWhenComplete,proceedIfError);if(priority===true){hpItems[name]=item}else{lpItems[name]=item}
+items[name]=item;checkIfBlocked(item);}
+function addTimeDelayFile(name,path){var item=new obj.file(name,path,false,[],false,false,true);item.isTimeDelay=true;log(name+' ... '+' FILE! TDELAY');lpItems[name]=item;items[name]=item;checkIfBlocked(item);}
+function addTimeDelayFunc(name,func,parameters){var item=new obj.func(name,func,parameters,false,[],true,true);item.isTimeDelay=true;log(name+' ... '+' FUNCTION! TDELAY');lpItems[name]=item;items[name]=item;checkIfBlocked(item);}
+function checkIfBlocked(item){if(isBlocked(item)===true||allowLoad==false)return;item.process();}
+function isBlocked(item){if(item.isTimeDelay===true&&timeDelayFired===false){log(item.name+" blocked = TIME DELAY!");return true;}
+if(item.blockedBy instanceof Array){for(var i=0;i<item.blockedBy.length;i++){var block=item.blockedBy[i];if(items.hasOwnProperty(block)===false){log(item.name+" blocked = "+block);return true;}else if(item.proceedIfError===true&&items[block].isError===true){return false;}else if(items[block].isComplete===false){log(item.name+" blocked = "+block);return true;}}}
+return false;}
+function markLoaded(filename){if(!filename||0===filename.length){return;}
+if(filename in items){var item=items[filename];if(item.isComplete===true){log(item.name+' '+filename+': error loaded duplicate')}else{item.isComplete=true;item.isInitialized=true;}}else{items[filename]=new obj.fileLoaded(filename,true);}
+log("markLoaded dummyfile: "+items[filename].name);}
+function logWhatsBlocked(){for(var i in items){if(items.hasOwnProperty(i)===false)continue;var item=items[i];isBlocked(item)}}
+function log(msg){var href=window.location.href;var reg=new RegExp('[?&]ezq=([^&#]*)','i');var string=reg.exec(href);var res=string?string[1]:null;if(res==="1")console.debug(msg);}
+function processAll(){count++;if(count>200)return;log("let's go");processItems(hpItems);processItems(lpItems);}
+function processItems(list){for(var i in list){if(list.hasOwnProperty(i)===false)continue;var item=list[i];if(item.isComplete===true||isBlocked(item)||item.isInitialized===true||item.isError===true){if(item.isError===true){log(item.name+': error')}else if(item.isComplete===true){log(item.name+': complete already')}else if(item.isInitialized===true){log(item.name+': initialized already')}}else{item.process();}}}
+init();return{addFile:addFile,addDelayFile:addTimeDelayFile,addFunc:addFunc,addDelayFunc:addTimeDelayFunc,items:items,processAll:processAll,setallowLoad:setallowLoad,markLoaded:markLoaded,logWhatsBlocked:logWhatsBlocked,};})();__ez.evt.add=function(e,t,n){e.addEventListener?e.addEventListener(t,n,!1):e.attachEvent?e.attachEvent("on"+t,n):e["on"+t]=n()},__ez.evt.remove=function(e,t,n){e.removeEventListener?e.removeEventListener(t,n,!1):e.detachEvent?e.detachEvent("on"+t,n):delete e["on"+t]};__ez.script.add=function(e){var t=document.createElement("script");t.src=e,t.async=!0,t.type="text/javascript",document.getElementsByTagName("head")[0].appendChild(t)};__ez.dot={};__ez.queue.addFile('/detroitchicago/boise.js', '/detroitchicago/boise.js?gcb=195-0&cb=1', false, [], true, false, true, false);__ez.queue.addFile('/detroitchicago/memphis.js', '/detroitchicago/memphis.js?gcb=195-0&cb=14', false, [], true, false, true, false);__ez.queue.addFile('/detroitchicago/minneapolis.js', '/detroitchicago/minneapolis.js?gcb=195-0&cb=3', false, [], true, false, true, false);__ez.queue.addFile('/detroitchicago/rochester.js', '/detroitchicago/rochester.js?gcb=195-0&cb=12', false, ['/detroitchicago/memphis.js','/detroitchicago/minneapolis.js'], true, false, true, false);__ez.vep=(function(){var pixels=[],pxURL="/detroitchicago/grapefruit.gif";function AddPixel(vID,pixelData){if(__ez.dot.isDefined(vID)&&__ez.dot.isValid(pixelData)){pixels.push({type:'video',video_impression_id:vID,domain_id:__ez.dot.getDID(),t_epoch:__ez.dot.getEpoch(0),data:__ez.dot.dataToStr(pixelData)});}}
+function Fire(){if(typeof document.visibilityState!=='undefined'&&document.visibilityState==="prerender"){return;}
+if(__ez.dot.isDefined(pixels)&&pixels.length>0){while(pixels.length>0){var j=5;if(j>pixels.length){j=pixels.length;}
+var pushPixels=pixels.splice(0,j);var pixelURL=__ez.dot.getURL(pxURL)+"?orig="+(__ez.template.isOrig===true?1:0)+"&v="+btoa(JSON.stringify(pushPixels));__ez.dot.Fire(pixelURL);}}
+pixels=[];}
+return{Add:AddPixel,Fire:Fire};})();</script><script data-ezscrex='false' data-cfasync='false' data-pagespeed-no-defer>__ez.pel=(function(){var pixels=[],pxURL="/porpoiseant/army.gif";function AddAndFirePixel(adSlot,pixelData){AddPixel(adSlot,pixelData,0,0,0,0,0);Fire();}
+function AddAndFireOrigPixel(adSlot,pixelData){AddPixel(adSlot,pixelData,0,0,0,0,0,true);Fire();}
+function GetCurrentPixels(){return pixels;}
+function AddPixel(adSlot,pixelData,revenue,est_revenue,bid_floor_filled,bid_floor_prev,stat_source_id,isOrig){if(!__ez.dot.isDefined(adSlot)||__ez.dot.isAnyDefined(adSlot.getSlotElementId,adSlot.ElementId)==false){return;}
+var ad_position_id=parseInt(__ez.dot.getTargeting(adSlot,'ap'));var impId=__ez.dot.getSlotIID(adSlot),adUnit=__ez.dot.getAdUnit(adSlot,isOrig);var compId=parseInt(__ez.dot.getTargeting(adSlot,"compid"));var lineItemId=0;var creativeId=0;var ezimData=getEzimData(adSlot);if(typeof ezimData=='object'){if(ezimData.creative_id!==undefined){creativeId=ezimData.creative_id;}
+if(ezimData.line_item_id!==undefined){lineItemId=ezimData.line_item_id;}}
+if(__ez.dot.isDefined(impId,adUnit)&&__ez.dot.isValid(pixelData)){pixels.push({type:"impression",impression_id:impId,domain_id:__ez.dot.getDID(),unit:adUnit,t_epoch:__ez.dot.getEpoch(0),revenue:revenue,est_revenue:est_revenue,ad_position:ad_position_id,ad_size:"",bid_floor_filled:bid_floor_filled,bid_floor_prev:bid_floor_prev,stat_source_id:stat_source_id,country_code:__ez.dot.getCC(),pageview_id:__ez.dot.getPageviewId(),comp_id:compId,line_item_id:lineItemId,creative_id:creativeId,data:__ez.dot.dataToStr(pixelData),is_orig:isOrig||__ez.template.isOrig,});}}
+function AddPixelById(impFullId,pixelData,isOrig){var vals=impFullId.split('/');if(__ez.dot.isDefined(impFullId)&&vals.length===3&&__ez.dot.isValid(pixelData)){var adUnit=vals[0],impId=vals[2];pixels.push({type:"impression",impression_id:impId,domain_id:__ez.dot.getDID(),unit:adUnit,t_epoch:__ez.dot.getEpoch(0),pageview_id:__ez.dot.getPageviewId(),data:__ez.dot.dataToStr(pixelData),is_orig:isOrig||__ez.template.isOrig});}}
+function Fire(){if(typeof document.visibilityState!=='undefined'&&document.visibilityState==="prerender")return;if(__ez.dot.isDefined(pixels)&&pixels.length>0){var allPixels=[pixels.filter(function(pixel){return pixel.is_orig}),pixels.filter(function(pixel){return!pixel.is_orig})];allPixels.forEach(function(pixels){while(pixels.length>0){var isOrig=pixels[0].is_orig||false;var j=5;if(j>pixels.length){j=pixels.length;}
+var pushPixels=pixels.splice(0,j);var pixelURL=__ez.dot.getURL(pxURL)+"?orig="+(isOrig===true?1:0)+"&sts="+btoa(JSON.stringify(pushPixels));if(typeof window.isAmp!=='undefined'&&isAmp&&typeof window._ezaq!=='undefined'&&_ezaq.hasOwnProperty("domain_id")){pixelURL+="&visit_uuid="+_ezaq['visit_uuid'];}
+__ez.dot.Fire(pixelURL);}})}
+pixels=[];}
+function getEzimData(adSlot){if(typeof _ezim_d=="undefined"){return false}
+var adUnitName=__ez.dot.getAdUnitPath(adSlot).split('/').pop();if(typeof _ezim_d==='object'&&_ezim_d.hasOwnProperty(adUnitName)){return _ezim_d[adUnitName];}
+for(var ezimKey in _ezim_d){if(ezimKey.split('/').pop()===adUnitName){return _ezim_d[ezimKey];}}
+return false;}
+return{Add:AddPixel,AddAndFire:AddAndFirePixel,AddAndFireOrig:AddAndFireOrigPixel,AddById:AddPixelById,Fire:Fire,GetPixels:GetCurrentPixels,};})();__ez.queue.addFile('/detroitchicago/raleigh.js', '/detroitchicago/raleigh.js?gcb=195-0&cb=5', false, [], true, false, true, false);__ez.queue.addFile('/detroitchicago/tampa.js', '/detroitchicago/tampa.js?gcb=195-0&cb=4', false, [], true, false, true, false);</script>
+<script data-ezscrex="false" data-cfasync="false">(function(){if("function"===typeof window.CustomEvent)return!1;window.CustomEvent=function(c,a){a=a||{bubbles:!1,cancelable:!1,detail:null};var b=document.createEvent("CustomEvent");b.initCustomEvent(c,a.bubbles,a.cancelable,a.detail);return b}})();</script><script data-ezscrex="false" data-cfasync="false">__ez.queue.addFile('/detroitchicago/tulsa.js', '/detroitchicago/tulsa.js?gcb=195-0&cb=5', false, [], true, false, true, false);</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Poštne Številke krajev na Ž</title>
+
+		<!-- All in One SEO 4.1.4.2 -->
+		<meta name="description" content="Poštne številke krajev, ki se začnejo na črko Ž. Tukaj boste hitro izvedeli kakšna je poštna številka mesta Žalec, Železniki, Žiri, Žirovnica, Žužemberk,..."/>
+		<meta name="robots" content="max-image-preview:large"/>
+		<meta name="keywords" content="žalec,železniki,žiri,žirovnica,žužemberk,2287,3310,4209,4226,4228,4274,8360,žabnica,žetale"/>
+		<link rel="canonical" href="https://www.postnestevilke.com/postne-stevilke-z1.php"/>
+		<meta property="og:locale" content="sl_SI"/>
+		<meta property="og:site_name" content="Poštne Številke | Vse Poštne Številke Slovenije"/>
+		<meta property="og:type" content="article"/>
+		<meta property="og:title" content="Poštne Številke krajev na Ž"/>
+		<meta property="og:description" content="Poštne številke krajev, ki se začnejo na črko Ž. Tukaj boste hitro izvedeli kakšna je poštna številka mesta Žalec, Železniki, Žiri, Žirovnica, Žužemberk,..."/>
+		<meta property="og:url" content="https://www.postnestevilke.com/postne-stevilke-z1.php"/>
+		<meta property="og:image" content="https://www.postnestevilke.com/wp-content/uploads/2020/12/Postne-stevilke.png"/>
+		<meta property="og:image:secure_url" content="https://www.postnestevilke.com/wp-content/uploads/2020/12/Postne-stevilke.png"/>
+		<meta property="article:published_time" content="2013-04-30T21:09:23+00:00"/>
+		<meta property="article:modified_time" content="2013-05-09T14:31:34+00:00"/>
+		<meta name="twitter:card" content="summary"/>
+		<meta name="twitter:domain" content="www.postnestevilke.com"/>
+		<meta name="twitter:title" content="Poštne Številke krajev na Ž"/>
+		<meta name="twitter:description" content="Poštne številke krajev, ki se začnejo na črko Ž. Tukaj boste hitro izvedeli kakšna je poštna številka mesta Žalec, Železniki, Žiri, Žirovnica, Žužemberk,..."/>
+		<meta name="twitter:image" content="https://www.postnestevilke.com/wp-content/uploads/2020/12/Postne-stevilke.png"/>
+		<script type="application/ld+json" class="aioseo-schema">
+			{"@context":"https:\/\/schema.org","@graph":[{"@type":"WebSite","@id":"https:\/\/www.postnestevilke.com\/#website","url":"https:\/\/www.postnestevilke.com\/","name":"Po\u0161tne \u0160tevilke","description":"Vse Po\u0161tne \u0160tevilke Slovenije","inLanguage":"sl-SI","publisher":{"@id":"https:\/\/www.postnestevilke.com\/#organization"}},{"@type":"Organization","@id":"https:\/\/www.postnestevilke.com\/#organization","name":"Po\u0161tne \u0160tevilke","url":"https:\/\/www.postnestevilke.com\/","logo":{"@type":"ImageObject","@id":"https:\/\/www.postnestevilke.com\/#organizationLogo","url":"https:\/\/www.postnestevilke.com\/wp-content\/uploads\/2020\/12\/Postne-stevilke.png","width":240,"height":120,"caption":"Po\u0161tne \u0161tevilke"},"image":{"@id":"https:\/\/www.postnestevilke.com\/#organizationLogo"}},{"@type":"BreadcrumbList","@id":"https:\/\/www.postnestevilke.com\/postne-stevilke-z1.php#breadcrumblist","itemListElement":[{"@type":"ListItem","@id":"https:\/\/www.postnestevilke.com\/#listItem","position":1,"item":{"@type":"WebPage","@id":"https:\/\/www.postnestevilke.com\/","name":"Domov","description":"Po\u0161tne \u0161tevilke Slovenije. Za vas smo uredili Seznam Po\u0161tnih \u0160tevilk, kjer lahko vidite kak\u0161na so po\u0161tne \u0161tevilke krajev, kamor \u017eelite poslati po\u0161ilko.","url":"https:\/\/www.postnestevilke.com\/"}}]},{"@type":"Person","@id":"https:\/\/www.postnestevilke.com\/author\/postar#author","url":"https:\/\/www.postnestevilke.com\/author\/postar","name":"Postar","image":{"@type":"ImageObject","@id":"https:\/\/www.postnestevilke.com\/postne-stevilke-z1.php#authorImage","url":"https:\/\/secure.gravatar.com\/avatar\/30aa14c17177839bc368496b5615f247?s=96&d=mm&r=g","width":96,"height":96,"caption":"Postar"}},{"@type":"WebPage","@id":"https:\/\/www.postnestevilke.com\/postne-stevilke-z1.php#webpage","url":"https:\/\/www.postnestevilke.com\/postne-stevilke-z1.php","name":"Po\u0161tne \u0160tevilke krajev na \u017d","description":"Po\u0161tne \u0161tevilke krajev, ki se za\u010dnejo na \u010drko \u017d. Tukaj boste hitro izvedeli kak\u0161na je po\u0161tna \u0161tevilka mesta \u017dalec, \u017delezniki, \u017diri, \u017dirovnica, \u017du\u017eemberk,...","inLanguage":"sl-SI","isPartOf":{"@id":"https:\/\/www.postnestevilke.com\/#website"},"breadcrumb":{"@id":"https:\/\/www.postnestevilke.com\/postne-stevilke-z1.php#breadcrumblist"},"author":"https:\/\/www.postnestevilke.com\/author\/postar#author","creator":"https:\/\/www.postnestevilke.com\/author\/postar#author","datePublished":"2013-04-30T21:09:23+02:00","dateModified":"2013-05-09T14:31:34+02:00"},{"@type":"Article","@id":"https:\/\/www.postnestevilke.com\/postne-stevilke-z1.php#article","name":"Po\u0161tne \u0160tevilke krajev na \u017d","description":"Po\u0161tne \u0161tevilke krajev, ki se za\u010dnejo na \u010drko \u017d. Tukaj boste hitro izvedeli kak\u0161na je po\u0161tna \u0161tevilka mesta \u017dalec, \u017delezniki, \u017diri, \u017dirovnica, \u017du\u017eemberk,...","inLanguage":"sl-SI","headline":"Po\u0161tne \u0160tevilke krajev na \u017d","author":{"@id":"https:\/\/www.postnestevilke.com\/author\/postar#author"},"publisher":{"@id":"https:\/\/www.postnestevilke.com\/#organization"},"datePublished":"2013-04-30T21:09:23+02:00","dateModified":"2013-05-09T14:31:34+02:00","articleSection":"Neuvr\u0161\u010deni, 2287, 3310, 4209, 4226, 4228, 4274, 8360, \u017dabnica, \u017ealec, \u017eelezniki, \u017detale, \u017eiri, \u017dirovnica, \u017du\u017eemberk","mainEntityOfPage":{"@id":"https:\/\/www.postnestevilke.com\/postne-stevilke-z1.php#webpage"},"isPartOf":{"@id":"https:\/\/www.postnestevilke.com\/postne-stevilke-z1.php#webpage"},"image":{"@type":"ImageObject","@id":"https:\/\/www.postnestevilke.com\/#articleImage","url":"https:\/\/www.postnestevilke.com\/wp-content\/uploads\/2020\/12\/Postne-stevilke.png","width":240,"height":120,"caption":"Po\u0161tne \u0161tevilke"}}]}
+		</script>
+		<!-- All in One SEO -->
+
+<link rel="dns-prefetch" href="//fonts.googleapis.com"/>
+<link rel="dns-prefetch" href="//s.w.org"/>
+<link rel="alternate" type="application/rss+xml" title="Poštne Številke » Vir" href="https://www.postnestevilke.com/feed"/>
+<link rel="alternate" type="application/rss+xml" title="Poštne Številke » Vir komentarjev" href="https://www.postnestevilke.com/comments/feed"/>
+<link rel="alternate" type="application/rss+xml" title="Poštne Številke » Poštne Številke krajev na Ž Vir komentarjev" href="https://www.postnestevilke.com/postne-stevilke-z1.php/feed"/>
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/www.postnestevilke.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.8.1"}};
+			!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode;p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0);e=i.toDataURL();return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(!p||!p.fillText)return!1;switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([10084,65039,8205,55357,56613],[10084,65039,8203,55357,56613])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(n=t.source||{}).concatemoji?c(n.concatemoji):n.wpemoji&&n.twemoji&&(c(n.twemoji),c(n.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel="stylesheet" id="genesis-simple-share-plugin-css-css" href="https://www.postnestevilke.com/wp-content/plugins/genesis-simple-share/assets/css/share.min.css?ver=0.1.0" type="text/css" media="all"/>
+<link rel="stylesheet" id="genesis-simple-share-genericons-css-css" href="https://www.postnestevilke.com/wp-content/plugins/genesis-simple-share/assets/css/genericons.min.css?ver=0.1.0" type="text/css" media="all"/>
+<link rel="stylesheet" id="wp-block-library-css" href="https://www.postnestevilke.com/wp-includes/css/dist/block-library/style.min.css?ver=5.8.1" type="text/css" media="all"/>
+<link rel="stylesheet" id="contact-form-7-css" href="https://www.postnestevilke.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=5.4.2" type="text/css" media="all"/>
+<link rel="stylesheet" id="cookie_consent-css" href="https://www.postnestevilke.com/wp-content/plugins/piskotki/css/style.css?ver=5.8.1" type="text/css" media="all"/>
+<link rel="stylesheet" id="ivory-search-styles-css" href="https://www.postnestevilke.com/wp-content/plugins/add-search-to-menu/public/css/ivory-search.min.css?ver=4.6.6" type="text/css" media="all"/>
+<link rel="stylesheet" id="maitheme-google-fonts-css" href="//fonts.googleapis.com/css?family=Roboto+Slab%3A700%7CPoppins%3A400%2C600%2C700%7CSource+Sans+Pro%3A300%2C300i%2C400%2C700&amp;ver=1.3.0" type="text/css" media="all"/>
+<link rel="stylesheet" id="mai-theme-engine-css" href="https://www.postnestevilke.com/wp-content/plugins/mai-theme-engine/assets/css/mai-theme.min.css?ver=1.12.0" type="text/css" media="all"/>
+<link rel="stylesheet" id="flexington-css" href="https://www.postnestevilke.com/wp-content/plugins/mai-theme-engine/assets/css/flexington.min.css?ver=2.5.0" type="text/css" media="all"/>
+<link rel="stylesheet" id="mai-law-pro-css" href="https://www.postnestevilke.com/wp-content/themes/mai-law-pro/style.css?ver=1.3.0.12420201656" type="text/css" media="all"/>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-includes/js/jquery/jquery.min.js?ver=3.6.0" id="jquery-core-js"></script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2" id="jquery-migrate-js"></script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-content/plugins/genesis-simple-share/assets/js/sharrre/jquery.sharrre.min.js?ver=0.1.0" id="genesis-simple-share-plugin-js-js"></script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-content/plugins/genesis-simple-share/assets/js/waypoints.min.js?ver=0.1.0" id="genesis-simple-share-waypoint-js-js"></script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-content/plugins/piskotki/js/test.js?ver=5.8.1" id="cookie_consent-js"></script>
+<link rel="https://api.w.org/" href="https://www.postnestevilke.com/wp-json/"/><link rel="alternate" type="application/json" href="https://www.postnestevilke.com/wp-json/wp/v2/posts/162"/><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.postnestevilke.com/xmlrpc.php?rsd"/>
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://www.postnestevilke.com/wp-includes/wlwmanifest.xml"/> 
+<meta name="generator" content="WordPress 5.8.1"/>
+<link rel="shortlink" href="https://www.postnestevilke.com/?p=162"/>
+<link rel="alternate" type="application/json+oembed" href="https://www.postnestevilke.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.postnestevilke.com%2Fpostne-stevilke-z1.php"/>
+<link rel="alternate" type="text/xml+oembed" href="https://www.postnestevilke.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.postnestevilke.com%2Fpostne-stevilke-z1.php&amp;format=xml"/>
+<meta name="robots" content="index,follow"/>
+<!-- Tracking code easily added by Piskotki.Net -->
+<script type="text/plain" class="cc-onconsent-analytics">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-48355411-1', 'postnestevilke.com');
+
+ga('send', 'pageview');
+</script>
+<script type="text/javascript">
+      // <![CDATA[
+      cc.initialise({
+        cookies: {
+              necessary: {
+                title: 'Obvezni piškotki',
+                description: 'Posamezni piškotki so nujni za delovanje naše spletne strani in jih ni moč onemogočiti.',
+                link: ''
+              },
+            
+              analytics: {
+                title: 'Statistika',
+                description: 'Dovoljujem anonimno spremljanje statistike obiska.',
+                link: ''
+              },
+            
+              advertising: {
+                title: 'Oglaševanje',
+                description: 'Dovoljujem prikazovanje meni prilagojenih oglasov.',
+                link: ''
+              },
+            },
+        settings: {style: "light",bannerPosition: "bottom",tagPosition: "",consenttype: "implicit",}
+      });
+      // ]]>
+      
+
+      </script><link rel="pingback" href="https://www.postnestevilke.com/xmlrpc.php"/>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-48355411-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-48355411-1');
+</script>
+<style>
+	:root {
+		--header-spacer: 0;
+		--text-title: 100%;
+		--logo-width: 200px;
+		--logo-shrink-width: 140px;
+		--logo-margin-top: 18px;
+		--logo-margin-bottom: 12px;
+	}
+	.site-title.has-text-title a {
+		font-size: var(--text-title);
+	}
+	@media only screen and (min-width: 769px) {
+		.site-title a {
+			margin-top: var(--logo-margin-top);
+			margin-bottom: var(--logo-margin-bottom);
+		}
+		.custom-logo-link {
+			max-width: var(--logo-width);
+		}
+	}
+	@media only screen and (max-width: 768px) {
+		.site-title a {
+			margin-top: 4px;
+			margin-bottom: 4px;
+		}
+		.custom-logo-link {
+			max-width: var(--logo-shrink-width);
+		}
+	}
+	</style><style>
+	@media only screen and (max-width: 768px) {
+		.header-before,
+		.header-left,
+		.header-right,
+		.nav-primary,
+		.nav-secondary {
+			display: none;
+		}
+		.mai-toggle {
+			display: block;
+		}
+	}
+	</style><link rel="icon" href="https://www.postnestevilke.com/wp-content/uploads/2020/12/favicon.jpg" sizes="32x32"/>
+<link rel="icon" href="https://www.postnestevilke.com/wp-content/uploads/2020/12/favicon.jpg" sizes="192x192"/>
+<link rel="apple-touch-icon" href="https://www.postnestevilke.com/wp-content/uploads/2020/12/favicon.jpg"/>
+<meta name="msapplication-TileImage" content="https://www.postnestevilke.com/wp-content/uploads/2020/12/favicon.jpg"/>
+		<style type="text/css" id="wp-custom-css">
+			/* GENERAL SETTINGS */
+
+body {
+	font-size:1.1em!important;
+	font-weight:400;
+	background:#fff;
+}
+a {
+	color: #0E4478;
+	text-decoration:none!important;
+}
+
+a:hover, a:active, a:focus {
+	color: #FF4F4F!important;
+}
+
+
+
+
+
+
+
+/* HEADER SETTINGS */
+
+.site-header {
+	background: url('https://www.postnestevilke.com/wp-content/uploads/2020/12/bg.png');
+  background-repeat: repeat-x;
+	border-bottom:none;
+}
+
+
+#genesis-nav-primary {
+	color: #0E4478!important;
+	background:#C3EEFF!important;
+}
+
+.nav-primary a {
+	color: #0E4478!important;
+	background:#C3EEFF!important;
+}
+
+.nav-primary a:hover {
+	color: #FF4F4F!important;
+	background:#C3EEFF!important;
+}
+
+
+
+
+
+/* HOMEPAGE SETTINGS */
+
+/* Search box */
+
+input#is-search-input.is-search-input {
+	padding:10px 45px!important;
+	height:50px;
+}
+
+.is-search-form.is-form-style.is-form-style-3.is-form-id-394 {
+	padding:10px 45px!important;
+	height:50px;
+}
+
+
+/* News section */
+
+.newsbtn {
+	background:#0E4478!important;
+	margin-top:15px;
+}
+
+.newstitle {
+	font-size:1.2em;
+	font-weight:600;
+}
+
+.newsbox img {
+	text-align:center;
+}
+
+
+
+
+
+
+
+/* FOOTER SETTINGS */
+
+/* Footr widgets */
+
+.footer-widgets {
+	background-color: #C3EEFF;
+	color:#000;
+}
+
+.footer-widgets a {
+	color:#0E4478!important;
+}
+
+.footer-widgets h3 {
+	color:#0E4478!important;
+}
+
+/* FOOTER */
+
+.site-footer {
+	background-color: #0E4478;
+	color: #C3EEFF;
+	font-size:0.9em;
+}
+
+
+		</style>
+		<script type="text/javascript">var ezouid = "1";</script><base href="https://www.postnestevilke.com/postne-stevilke-z1.php"><script type='text/javascript'>
+var ezoTemplate = 'old_site_noads';
+if(typeof ezouid == 'undefined')
+{
+    var ezouid = 'none';
+}
+var ezoFormfactor = '1';
+var ezo_elements_to_check = Array();
+</script><!-- START EZHEAD -->
+<script data-ezscrex="false" type='text/javascript'>
+var soc_app_id = '0';
+var did = 293264;
+var ezdomain = 'postnestevilke.com';
+var ezoicSearchable = 1;
+</script>
+<!--{jquery}-->
+<!-- END EZHEAD -->
+<script data-ezscrex="false" type="text/javascript" data-cfasync="false">var _ezaq = {"ad_cache_level":0,"ad_lazyload_version":0,"ad_load_version":0,"city":"Ljubljana","country":"SI","days_since_last_visit":-1,"domain_id":293264,"engaged_time_visit":0,"ezcache_level":2,"ezcache_skip_code":0,"form_factor_id":1,"framework_id":1,"is_return_visitor":false,"is_sitespeed":0,"last_page_load":"","last_pageview_id":"","lt_cache_level":0,"metro_code":0,"page_ad_positions":"","page_view_count":0,"page_view_id":"978bd78c-7b6c-4532-502e-32cfed69ce16","position_selection_id":0,"postal_code":"1000","pv_event_count":0,"response_size_orig":58887,"response_time_orig":74,"serverid":"52.58.101.211:29349","state":"061","t_epoch":1636051110,"template_id":120,"time_on_site_visit":0,"url":"https://www.postnestevilke.com/postne-stevilke-z1.php","user_id":0,"weather_precipitation":0,"weather_summary":"","weather_temperature":0,"word_count":522,"worst_bad_word_level":0};var _ezExtraQueries = "&ez_orig=1";</script>
+<script data-ezscrex='false' data-pagespeed-no-defer data-cfasync='false'>
+function create_ezolpl(pvID, rv) {
+    var d = new Date();
+    d.setTime(d.getTime() + (365*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    __ez.ck.setByCat("ezux_lpl_293264=" + new Date().getTime() + "|" + pvID + "|" + rv + "; " + expires, 3);
+}
+function attach_ezolpl(pvID, rv) {
+    if (document.readyState === "complete") {
+        create_ezolpl(pvID, rv);
+    }
+    if(window.attachEvent) {
+        window.attachEvent("onload", create_ezolpl, pvID, rv);
+    } else {
+        if(window.onload) {
+            var curronload = window.onload;
+            var newonload = function(evt) {
+                curronload(evt);
+                create_ezolpl(pvID, rv);
+            };
+            window.onload = newonload;
+        } else {
+            window.onload = create_ezolpl.bind(null, pvID, rv);
+        }
+    }
+}
+
+__ez.queue.addFunc("attach_ezolpl", "attach_ezolpl", ["978bd78c-7b6c-4532-502e-32cfed69ce16", "false"], false, ['/detroitchicago/boise.js'], true, false, false, false);
+</script></head>
+<body class="post-template-default single single-post postid-162 single-format-standard wp-custom-logo genesis header-full-width md-content genesis-breadcrumbs-hidden genesis-footer-widgets-visible has-standard-menu singular no-js text-md no-sidebars" itemscope="" itemtype="https://schema.org/WebPage">	<script>
+		//<![CDATA[
+		( function() {
+			var c = document.body.classList;
+			c.remove( 'no-js' );
+			c.add( 'js' );
+		})();
+		//]]>
+	</script>
+	<div class="site-container"><ul class="genesis-skip-link"><li><a href="#mai-toggle" class="screen-reader-shortcut"> Menu</a></li><li><a href="#genesis-nav-header-left" class="screen-reader-shortcut"> Skip to left header navigation</a></li><li><a href="#genesis-nav-header-right" class="screen-reader-shortcut"> Skip to right header navigation</a></li><li><a href="#genesis-content" class="screen-reader-shortcut"> Preskoči na glavno vsebino</a></li><li><a href="#genesis-sidebar-primary" class="screen-reader-shortcut"> Preskoči na primarno stransko vrstico</a></li><li><a href="#genesis-footer-widgets" class="screen-reader-shortcut"> Preskoči do noge</a></li></ul><span id="header-trigger-wrap"><span id="header-trigger"></span></span><header class="site-header has-header-left has-header-right" itemscope="" itemtype="https://schema.org/WPHeader"><div class="wrap"><div class="site-header-row row middle-xs between-xs"><div class="title-area col col-xs-auto col-md-12 col-lg-auto text-xs-center start-xs"><p class="site-title" itemprop="headline"><a href="https://www.postnestevilke.com/" class="custom-logo-link" rel="home"><img width="240" height="120" src="https://www.postnestevilke.com/wp-content/uploads/2020/12/Postne-stevilke.png" class="custom-logo" alt="Poštne številke"/></a></p><p class="site-description screen-reader-text" itemprop="description">Vse Poštne Številke Slovenije</p></div><div class="header-left col col-xs col-md-6 col-lg first-lg text-xs-right"><nav class="nav-header_left" id="genesis-nav-header-left"><ul id="menu-levi" class="nav-header menu genesis-nav-menu js-superfish"><li id="menu-item-350" class="menu-item menu-item-type-post_type menu-item-object-post current-menu-ancestor current-menu-parent menu-item-has-children menu-item-350"><a href="https://www.postnestevilke.com/postne-stevilke-po-abecedi.php" itemprop="url"><span itemprop="name">Poštne številke po abecedi</span></a>
+<ul class="sub-menu">
+	<li id="menu-item-352" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-352"><a href="https://www.postnestevilke.com/postne-stevilke-a.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na A</span></a></li>
+	<li id="menu-item-353" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-353"><a href="https://www.postnestevilke.com/postne-stevilke-b.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na B</span></a></li>
+	<li id="menu-item-354" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-354"><a href="https://www.postnestevilke.com/postne-stevilke-c.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na C</span></a></li>
+	<li id="menu-item-355" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-355"><a href="https://www.postnestevilke.com/postne-stevilke-c1.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na Č</span></a></li>
+	<li id="menu-item-356" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-356"><a href="https://www.postnestevilke.com/postne-stevilke-d.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na D</span></a></li>
+	<li id="menu-item-351" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-351"><a href="https://www.postnestevilke.com/postne-stevilke-f.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na F</span></a></li>
+	<li id="menu-item-357" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-357"><a href="https://www.postnestevilke.com/postne-stevilke-g.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na G</span></a></li>
+	<li id="menu-item-358" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-358"><a href="https://www.postnestevilke.com/postne-stevilke-h.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na H</span></a></li>
+	<li id="menu-item-359" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-359"><a href="https://www.postnestevilke.com/postne-stevilke-i.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na I</span></a></li>
+	<li id="menu-item-360" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-360"><a href="https://www.postnestevilke.com/postne-stevilke-j.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na J</span></a></li>
+	<li id="menu-item-361" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-361"><a href="https://www.postnestevilke.com/postne-stevilke-k.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na K</span></a></li>
+	<li id="menu-item-362" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-362"><a href="https://www.postnestevilke.com/postne-stevilke-l.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na L</span></a></li>
+	<li id="menu-item-363" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-363"><a href="https://www.postnestevilke.com/postne-stevilke-m.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na M</span></a></li>
+	<li id="menu-item-364" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-364"><a href="https://www.postnestevilke.com/postne-stevilke-n.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na N</span></a></li>
+	<li id="menu-item-365" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-365"><a href="https://www.postnestevilke.com/postne-stevilke-o.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na O</span></a></li>
+	<li id="menu-item-366" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-366"><a href="https://www.postnestevilke.com/postne-stevilke-p.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na P</span></a></li>
+	<li id="menu-item-367" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-367"><a href="https://www.postnestevilke.com/postne-stevilke-r.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na R</span></a></li>
+	<li id="menu-item-368" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-368"><a href="https://www.postnestevilke.com/postne-stevilke-s.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na S</span></a></li>
+	<li id="menu-item-369" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-369"><a href="https://www.postnestevilke.com/postne-stevilke-s1.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na Š</span></a></li>
+	<li id="menu-item-370" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-370"><a href="https://www.postnestevilke.com/postne-stevilke-t.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na T</span></a></li>
+	<li id="menu-item-371" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-371"><a href="https://www.postnestevilke.com/postne-stevilke-u.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na U</span></a></li>
+	<li id="menu-item-372" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-372"><a href="https://www.postnestevilke.com/postne-stevilke-v.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na V</span></a></li>
+	<li id="menu-item-373" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-373"><a href="https://www.postnestevilke.com/postne-stevilke-z.php" itemprop="url"><span itemprop="name">Poštne Številke krajev na Z</span></a></li>
+	<li id="menu-item-374" class="menu-item menu-item-type-post_type menu-item-object-post current-menu-item menu-item-374"><a href="https://www.postnestevilke.com/postne-stevilke-z1.php" aria-current="page" itemprop="url"><span itemprop="name">Poštne Številke krajev na Ž</span></a></li>
+</ul>
+</li>
+<li id="menu-item-375" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-375"><a href="https://www.postnestevilke.com/postne-stevilke-po-stevilkah.php" itemprop="url"><span itemprop="name">Poštne številke po številkah</span></a>
+<ul class="sub-menu">
+	<li id="menu-item-342" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-342"><a href="https://www.postnestevilke.com/postne-stevilke-1000-1434.php" itemprop="url"><span itemprop="name">1000 – 1434</span></a></li>
+	<li id="menu-item-343" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-343"><a href="https://www.postnestevilke.com/postne-stevilke-2000-2394.php" itemprop="url"><span itemprop="name">2000 – 2394</span></a></li>
+	<li id="menu-item-344" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-344"><a href="https://www.postnestevilke.com/postne-stevilke-3000-3342.php" itemprop="url"><span itemprop="name">3000 – 3342</span></a></li>
+	<li id="menu-item-345" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-345"><a href="https://www.postnestevilke.com/postne-stevilke-4000-4294.php" itemprop="url"><span itemprop="name">4000 – 4294</span></a></li>
+	<li id="menu-item-346" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-346"><a href="https://www.postnestevilke.com/postne-stevilke-5000-5297.php" itemprop="url"><span itemprop="name">5000 – 5297</span></a></li>
+	<li id="menu-item-347" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-347"><a href="https://www.postnestevilke.com/postne-stevilke-6000-6333.php" itemprop="url"><span itemprop="name">6000 – 6333</span></a></li>
+	<li id="menu-item-348" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-348"><a href="https://www.postnestevilke.com/postne-stevilke-8000-8362.php" itemprop="url"><span itemprop="name">8000 – 8362</span></a></li>
+	<li id="menu-item-349" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-349"><a href="https://www.postnestevilke.com/postne-stevilke-9000-9265.php" itemprop="url"><span itemprop="name">9000 – 9265</span></a></li>
+</ul>
+</li>
+</ul></nav></div><div class="header-right col col-xs col-md-6 col-lg text-xs-left"><nav class="nav-header_right" id="genesis-nav-header-right"><ul id="menu-desni" class="nav-header menu genesis-nav-menu js-superfish"><li id="menu-item-420" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-420"><a href="https://www.postnestevilke.com/posebne-postne-stevilke.php" itemprop="url"><span itemprop="name">Posebne Poštne Številke</span></a></li>
+<li id="menu-item-421" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-421"><a href="#" itemprop="url"><span itemprop="name">Druge države</span></a>
+<ul class="sub-menu">
+	<li id="menu-item-422" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-422"><a href="https://www.postnestevilke.com/postne-stevilke-hrvaska" itemprop="url"><span itemprop="name">Poštne številke Hrvaška</span></a></li>
+	<li id="menu-item-531" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-531"><a href="https://www.postnestevilke.com/postne-stevilke-crne-gore" itemprop="url"><span itemprop="name">Poštne številke Črne gore</span></a></li>
+</ul>
+</li>
+</ul></nav></div></div><div id="mai-menu" class="mai-menu"><div class="mai-menu-outer"><div class="mai-menu-inner"><form class="search-form" method="get" action="https://www.postnestevilke.com/" role="search" itemprop="potentialAction" itemscope="" itemtype="https://schema.org/SearchAction"><label class="search-form-label screen-reader-text" for="searchform-4">Iskanje...</label><input class="search-form-input" type="search" name="s" id="searchform-4" placeholder="Iskanje..." itemprop="query-input"/><input class="search-form-submit" type="submit" value="Iskanje"/><meta content="https://www.postnestevilke.com/?s={s}" itemprop="target"/></form><div class="menu-levi-container"><ul id="menu-levi-1" class="nav-header menu"><li class="menu-item menu-item-type-post_type menu-item-object-post current-menu-ancestor current-menu-parent menu-item-has-children menu-item-350"><a href="https://www.postnestevilke.com/postne-stevilke-po-abecedi.php" itemprop="url">Poštne številke po abecedi</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-352"><a href="https://www.postnestevilke.com/postne-stevilke-a.php" itemprop="url">Poštne Številke krajev na A</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-353"><a href="https://www.postnestevilke.com/postne-stevilke-b.php" itemprop="url">Poštne Številke krajev na B</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-354"><a href="https://www.postnestevilke.com/postne-stevilke-c.php" itemprop="url">Poštne Številke krajev na C</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-355"><a href="https://www.postnestevilke.com/postne-stevilke-c1.php" itemprop="url">Poštne Številke krajev na Č</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-356"><a href="https://www.postnestevilke.com/postne-stevilke-d.php" itemprop="url">Poštne Številke krajev na D</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-351"><a href="https://www.postnestevilke.com/postne-stevilke-f.php" itemprop="url">Poštne Številke krajev na F</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-357"><a href="https://www.postnestevilke.com/postne-stevilke-g.php" itemprop="url">Poštne Številke krajev na G</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-358"><a href="https://www.postnestevilke.com/postne-stevilke-h.php" itemprop="url">Poštne Številke krajev na H</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-359"><a href="https://www.postnestevilke.com/postne-stevilke-i.php" itemprop="url">Poštne Številke krajev na I</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-360"><a href="https://www.postnestevilke.com/postne-stevilke-j.php" itemprop="url">Poštne Številke krajev na J</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-361"><a href="https://www.postnestevilke.com/postne-stevilke-k.php" itemprop="url">Poštne Številke krajev na K</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-362"><a href="https://www.postnestevilke.com/postne-stevilke-l.php" itemprop="url">Poštne Številke krajev na L</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-363"><a href="https://www.postnestevilke.com/postne-stevilke-m.php" itemprop="url">Poštne Številke krajev na M</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-364"><a href="https://www.postnestevilke.com/postne-stevilke-n.php" itemprop="url">Poštne Številke krajev na N</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-365"><a href="https://www.postnestevilke.com/postne-stevilke-o.php" itemprop="url">Poštne Številke krajev na O</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-366"><a href="https://www.postnestevilke.com/postne-stevilke-p.php" itemprop="url">Poštne Številke krajev na P</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-367"><a href="https://www.postnestevilke.com/postne-stevilke-r.php" itemprop="url">Poštne Številke krajev na R</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-368"><a href="https://www.postnestevilke.com/postne-stevilke-s.php" itemprop="url">Poštne Številke krajev na S</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-369"><a href="https://www.postnestevilke.com/postne-stevilke-s1.php" itemprop="url">Poštne Številke krajev na Š</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-370"><a href="https://www.postnestevilke.com/postne-stevilke-t.php" itemprop="url">Poštne Številke krajev na T</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-371"><a href="https://www.postnestevilke.com/postne-stevilke-u.php" itemprop="url">Poštne Številke krajev na U</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-372"><a href="https://www.postnestevilke.com/postne-stevilke-v.php" itemprop="url">Poštne Številke krajev na V</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-373"><a href="https://www.postnestevilke.com/postne-stevilke-z.php" itemprop="url">Poštne Številke krajev na Z</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post current-menu-item menu-item-374"><a href="https://www.postnestevilke.com/postne-stevilke-z1.php" aria-current="page" itemprop="url">Poštne Številke krajev na Ž</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-375"><a href="https://www.postnestevilke.com/postne-stevilke-po-stevilkah.php" itemprop="url">Poštne številke po številkah</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-342"><a href="https://www.postnestevilke.com/postne-stevilke-1000-1434.php" itemprop="url">1000 – 1434</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-343"><a href="https://www.postnestevilke.com/postne-stevilke-2000-2394.php" itemprop="url">2000 – 2394</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-344"><a href="https://www.postnestevilke.com/postne-stevilke-3000-3342.php" itemprop="url">3000 – 3342</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-345"><a href="https://www.postnestevilke.com/postne-stevilke-4000-4294.php" itemprop="url">4000 – 4294</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-346"><a href="https://www.postnestevilke.com/postne-stevilke-5000-5297.php" itemprop="url">5000 – 5297</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-347"><a href="https://www.postnestevilke.com/postne-stevilke-6000-6333.php" itemprop="url">6000 – 6333</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-348"><a href="https://www.postnestevilke.com/postne-stevilke-8000-8362.php" itemprop="url">8000 – 8362</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-349"><a href="https://www.postnestevilke.com/postne-stevilke-9000-9265.php" itemprop="url">9000 – 9265</a></li>
+</ul>
+</li>
+</ul></div><div class="menu-desni-container"><ul id="menu-desni-1" class="nav-header menu"><li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-420"><a href="https://www.postnestevilke.com/posebne-postne-stevilke.php" itemprop="url">Posebne Poštne Številke</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-421"><a href="#" itemprop="url">Druge države</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-422"><a href="https://www.postnestevilke.com/postne-stevilke-hrvaska" itemprop="url">Poštne številke Hrvaška</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-531"><a href="https://www.postnestevilke.com/postne-stevilke-crne-gore" itemprop="url">Poštne številke Črne gore</a></li>
+</ul>
+</li>
+</ul></div></div></div></div></div></header><div class="site-inner"><div class="content-sidebar-wrap no-boxed-children"><main class="content content-no-sidebars" id="genesis-content"><article class="post-162 post type-post status-publish format-standard category-nekategorizirano tag-960 tag-957 tag-956 tag-961 tag-958 tag-963 tag-965 tag-zabnica tag-zalec tag-zelezniki tag-zetale tag-ziri tag-zirovnica tag-zuzemberk entry" aria-label="Poštne Številke krajev na Ž" itemscope="" itemtype="https://schema.org/CreativeWork"><header class="entry-header"><h1 class="entry-title" itemprop="headline">Poštne Številke krajev na Ž</h1>
+</header><div class="entry-content" itemprop="text"><div class="share-before share-filled share-medium" id="share-before-162"><div class="facebook" id="facebook-before-162" data-url="https://www.postnestevilke.com/postne-stevilke-z1.php" data-urlalt="https://www.postnestevilke.com/?p=162" data-text="Poštne Številke krajev na Ž" data-title="Share" data-reader="Share on Facebook" data-count="%s shares on Facebook"></div><div class="twitter" id="twitter-before-162" data-url="https://www.postnestevilke.com/postne-stevilke-z1.php" data-urlalt="https://www.postnestevilke.com/?p=162" data-text="Poštne Številke krajev na Ž" data-title="Tweet" data-reader="Tweet this" data-count="%s Tweets"></div><div class="pinterest" id="pinterest-before-162" data-url="https://www.postnestevilke.com/postne-stevilke-z1.php" data-urlalt="https://www.postnestevilke.com/?p=162" data-text="Poštne Številke krajev na Ž" data-title="Pin" data-reader="Pin this" data-count="%s Pins"></div><div class="linkedin" id="linkedin-before-162" data-url="https://www.postnestevilke.com/postne-stevilke-z1.php" data-urlalt="https://www.postnestevilke.com/?p=162" data-text="Poštne Številke krajev na Ž" data-title="Share" data-reader="Share on LinkedIn" data-count="%s shares on LinkedIn"></div></div>
+			<script type="text/javascript">
+				jQuery(document).ready(function($) {
+					$('#facebook-before-162').sharrre({
+										  share: {
+										    facebook: true
+										  },
+										  urlCurl: 'https://www.postnestevilke.com/wp-content/plugins/genesis-simple-share/assets/js/sharrre/sharrre.php',
+										  enableHover: false,
+										  enableTracking: true,
+										  disableCount: true,
+										  buttons: {  },
+										  click: function(api, options){
+										    api.simulateClick();
+										    api.openPopup('facebook');
+										  }
+										});
+$('#twitter-before-162').sharrre({
+										  share: {
+										    twitter: true
+										  },
+										  urlCurl: 'https://www.postnestevilke.com/wp-content/plugins/genesis-simple-share/assets/js/sharrre/sharrre.php',
+										  enableHover: false,
+										  enableTracking: true,
+										  disableCount: true,
+										  buttons: {  },
+										  click: function(api, options){
+										    api.simulateClick();
+										    api.openPopup('twitter');
+										  }
+										});
+$('#pinterest-before-162').sharrre({
+										  share: {
+										    pinterest: true
+										  },
+										  urlCurl: 'https://www.postnestevilke.com/wp-content/plugins/genesis-simple-share/assets/js/sharrre/sharrre.php',
+										  enableHover: false,
+										  enableTracking: true,
+										  disableCount: true,
+										  buttons: {  },
+										  click: function(api, options){
+										    api.simulateClick();
+										    api.openPopup('pinterest');
+										  }
+										});
+$('#linkedin-before-162').sharrre({
+										  share: {
+										    linkedin: true
+										  },
+										  urlCurl: 'https://www.postnestevilke.com/wp-content/plugins/genesis-simple-share/assets/js/sharrre/sharrre.php',
+										  enableHover: false,
+										  enableTracking: true,
+										  disableCount: true,
+										  buttons: {  },
+										  click: function(api, options){
+										    api.simulateClick();
+										    api.openPopup('linkedin');
+										  }
+										});
+
+				});
+		</script><iframe src="http://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.postnestevilke.com%2Fpostne-stevilke-z1.php&amp;layout=standard&amp;show_faces=true&amp;width=300&amp;height=25&amp;action=like&amp;font=arial&amp;colorscheme=light" id="fbLikeIframe" name="fbLikeIframe" scrolling="no" frameborder="0" allowtransparency="true" class="fbLikeContainer" style="border:none; overflow:hidden; width:300px; height:25px; display:inline;"></iframe><p><strong>Žabnica</strong> 4209<br/>
+<strong>Žalec</strong> 3310<br/>
+<strong>Železniki</strong> 4228<br/>
+<strong>Žetale</strong> 2287<br/>
+<strong>Žiri</strong> 4226<br/>
+<strong>Žirovnica</strong> 4274<br/>
+<strong>Žužemberk</strong> 8360</p>
+<p>Ostale poštne številke Slovenije:<br/>
+<a title="Poštne številke krajev na A" href="https://www.postnestevilke.com/postne-stevilke-a.php">A</a> | <a title="Poštne številke krajev na B" href="https://www.postnestevilke.com/postne-stevilke-b.php">B</a> | <a title="Poštne številke krajev na C" href="https://www.postnestevilke.com/postne-stevilke-c.php">C</a> | <a title="Poštne številke krajev na Č" href="https://www.postnestevilke.com/postne-stevilke-c1.php">Č</a> | <a title="Poštne številke krajev na D" href="https://www.postnestevilke.com/postne-stevilke-d.php">D</a> | <a title="Poštne številke krajev na F" href="https://www.postnestevilke.com/postne-stevilke-f.php">F</a> | <a title="Poštne številke krajev na G" href="https://www.postnestevilke.com/postne-stevilke-g.php">G</a> | <a title="Poštne številke krajev na H" href="https://www.postnestevilke.com/postne-stevilke-h.php">H</a> | <a title="Poštne številke krajev na I" href="https://www.postnestevilke.com/postne-stevilke-i.php">I</a> | <a title="Poštne številke krajev na J" href="https://www.postnestevilke.com/postne-stevilke-j.php">J</a> | <a title="Poštne številke krajev na K" href="https://www.postnestevilke.com/postne-stevilke-k.php">K</a> | <a title="Poštne številke krajev na L" href="https://www.postnestevilke.com/postne-stevilke-l.php">L</a> | <a title="Poštne številke krajev na M" href="https://www.postnestevilke.com/postne-stevilke-m.php">M</a> | <a title="Poštne številke krajev na N" href="https://www.postnestevilke.com/postne-stevilke-n.php">N</a> | <a title="Poštne številke krajev na O" href="https://www.postnestevilke.com/postne-stevilke-o.php">O</a> | <a title="Poštne številke krajev na P" href="https://www.postnestevilke.com/postne-stevilke-p.php">P</a> | <a title="Poštne številke krajev na R" href="https://www.postnestevilke.com/postne-stevilke-r.php">R</a> | <a title="Poštne številke krajev na S" href="https://www.postnestevilke.com/postne-stevilke-s.php">S</a> | <a title="Poštne številke krajev na Š" href="https://www.postnestevilke.com/postne-stevilke-s1.php">Š</a> | <a title="Poštne številke krajev na T" href="https://www.postnestevilke.com/postne-stevilke-t.php">T</a> | <a title="Poštne številke krajev na U" href="https://www.postnestevilke.com/postne-stevilke-u.php">U</a> | <a title="Poštne številke krajev na V" href="https://www.postnestevilke.com/postne-stevilke-v.php">V</a> | <a title="Poštne številke krajev na Z" href="https://www.postnestevilke.com/postne-stevilke-z.php">Z</a></p>
+<div class="share-after share-filled share-medium" id="share-after-162"><div class="facebook" id="facebook-after-162" data-url="https://www.postnestevilke.com/postne-stevilke-z1.php" data-urlalt="https://www.postnestevilke.com/?p=162" data-text="Poštne Številke krajev na Ž" data-title="Share" data-reader="Share on Facebook" data-count="%s shares on Facebook"></div><div class="twitter" id="twitter-after-162" data-url="https://www.postnestevilke.com/postne-stevilke-z1.php" data-urlalt="https://www.postnestevilke.com/?p=162" data-text="Poštne Številke krajev na Ž" data-title="Tweet" data-reader="Tweet this" data-count="%s Tweets"></div><div class="pinterest" id="pinterest-after-162" data-url="https://www.postnestevilke.com/postne-stevilke-z1.php" data-urlalt="https://www.postnestevilke.com/?p=162" data-text="Poštne Številke krajev na Ž" data-title="Pin" data-reader="Pin this" data-count="%s Pins"></div><div class="linkedin" id="linkedin-after-162" data-url="https://www.postnestevilke.com/postne-stevilke-z1.php" data-urlalt="https://www.postnestevilke.com/?p=162" data-text="Poštne Številke krajev na Ž" data-title="Share" data-reader="Share on LinkedIn" data-count="%s shares on LinkedIn"></div></div>
+			<script type="text/javascript">
+				jQuery(document).ready(function($) {
+					$('#facebook-after-162').sharrre({
+										  share: {
+										    facebook: true
+										  },
+										  urlCurl: 'https://www.postnestevilke.com/wp-content/plugins/genesis-simple-share/assets/js/sharrre/sharrre.php',
+										  enableHover: false,
+										  enableTracking: true,
+										  disableCount: true,
+										  buttons: {  },
+										  click: function(api, options){
+										    api.simulateClick();
+										    api.openPopup('facebook');
+										  }
+										});
+$('#twitter-after-162').sharrre({
+										  share: {
+										    twitter: true
+										  },
+										  urlCurl: 'https://www.postnestevilke.com/wp-content/plugins/genesis-simple-share/assets/js/sharrre/sharrre.php',
+										  enableHover: false,
+										  enableTracking: true,
+										  disableCount: true,
+										  buttons: {  },
+										  click: function(api, options){
+										    api.simulateClick();
+										    api.openPopup('twitter');
+										  }
+										});
+$('#pinterest-after-162').sharrre({
+										  share: {
+										    pinterest: true
+										  },
+										  urlCurl: 'https://www.postnestevilke.com/wp-content/plugins/genesis-simple-share/assets/js/sharrre/sharrre.php',
+										  enableHover: false,
+										  enableTracking: true,
+										  disableCount: true,
+										  buttons: {  },
+										  click: function(api, options){
+										    api.simulateClick();
+										    api.openPopup('pinterest');
+										  }
+										});
+$('#linkedin-after-162').sharrre({
+										  share: {
+										    linkedin: true
+										  },
+										  urlCurl: 'https://www.postnestevilke.com/wp-content/plugins/genesis-simple-share/assets/js/sharrre/sharrre.php',
+										  enableHover: false,
+										  enableTracking: true,
+										  disableCount: true,
+										  buttons: {  },
+										  click: function(api, options){
+										    api.simulateClick();
+										    api.openPopup('linkedin');
+										  }
+										});
+
+				});
+		</script><div class="code-block code-block-1" style="margin: 8px 0; clear: both;">
+<h3>Morda bi vas zanimalo</h3><div class="su-row regije"><div class="su-column su-column-size-1-3"><div class="su-column-inner su-u-clearfix su-u-trim">
+<a href="http://sudalen.com/Rsjk" target="_blank" rel="nofollow noopener noreferrer"><img class="alignnone size-full wp-image-508" src="https://www.postnestevilke.com/wp-content/uploads/2020/12/Student.jpg" alt="Študent" width="400" height="300"/></a>
+<div class="newstitle"><a href="http://sudalen.com/Rsjk" target="_blank" rel="nofollow noopener noreferrer">Študent medicine potencialno rešil ljudi pred popolno slepoto in si prislužil priznanje.</a></div>
+<a href="http://sudalen.com/Rsjk" class="su-button su-button-style-flat newsbtn" style="color:#fff;background-color:#2D89EF;border-color:#246ec0;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px" target="_self"><span style="color:#fff;padding:0px 24px;font-size:18px;line-height:36px;border-color:#6cadf4;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;text-shadow:none;-moz-text-shadow:none;-webkit-text-shadow:none">  Preberite novico </span></a>
+</div></div>
+<div class="su-column su-column-size-1-3"><div class="su-column-inner su-u-clearfix su-u-trim">
+<a href="http://sudalen.com/zCjk" target="_blank" rel="nofollow noopener noreferrer"><img class="alignnone size-full wp-image-514" src="https://www.postnestevilke.com/wp-content/uploads/2020/12/Znanost.jpg" alt="Znanost" width="400" height="300"/></a>
+<div class="newstitle"><a href="http://sudalen.com/zCjk" target="_blank" rel="nofollow noopener noreferrer">Švicarski znanstveniki so odkrili kako drastično zmanjšati previsok pritisk brez pomoči zdravnika.</a></div>
+<a href="http://sudalen.com/zCjk" class="su-button su-button-style-flat newsbtn" style="color:#fff;background-color:#2D89EF;border-color:#246ec0;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px" target="_self"><span style="color:#fff;padding:0px 24px;font-size:18px;line-height:36px;border-color:#6cadf4;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;text-shadow:none;-moz-text-shadow:none;-webkit-text-shadow:none">  Preberite novico </span></a>
+</div></div>
+<div class="su-column su-column-size-1-3"><div class="su-column-inner su-u-clearfix su-u-trim">
+<a href="http://sudalen.com/isjk" target="_blank" rel="nofollow noopener noreferrer"><img class="alignnone size-full wp-image-513" src="https://www.postnestevilke.com/wp-content/uploads/2020/12/Osebna.jpg" alt="Osebna zgodba" width="400" height="300"/></a>
+<div class="newstitle"><a href="http://sudalen.com/isjk" target="_blank" rel="nofollow noopener noreferrer">Hči Katje Foštar se je razgovorila kako ji je sladkorna skoraj vzela mamo in kako se je rešila.</a></div>
+<a href="http://sudalen.com/isjk" class="su-button su-button-style-flat newsbtn" style="color:#fff;background-color:#2D89EF;border-color:#246ec0;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px" target="_self"><span style="color:#fff;padding:0px 24px;font-size:18px;line-height:36px;border-color:#6cadf4;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;text-shadow:none;-moz-text-shadow:none;-webkit-text-shadow:none">  Preberite novico </span></a>
+</div></div></div></div>
+<!-- AI CONTENT END 1 -->
+<!--<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+			xmlns:dc="http://purl.org/dc/elements/1.1/"
+			xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+		<rdf:Description rdf:about="https://www.postnestevilke.com/postne-stevilke-z1.php"
+    dc:identifier="https://www.postnestevilke.com/postne-stevilke-z1.php"
+    dc:title="Poštne Številke krajev na Ž"
+    trackback:ping="https://www.postnestevilke.com/postne-stevilke-z1.php/trackback" />
+</rdf:RDF>-->
+</div></article><div class="adjacent-entry-pagination pagination"><div class="pagination-previous"><a href="https://www.postnestevilke.com/postne-stevilke-z.php" rel="prev"><span class="screen-reader-text">Prejšnja objava: </span><span class="adjacent-post-link"><span class="pagination-icon">«</span> Poštne Številke krajev na Z</span></a></div><div class="pagination-next"></div></div></main></div></div><div class="footer-widgets" id="genesis-footer-widgets"><h2 class="genesis-sidebar-title screen-reader-text">Footer</h2><div class="wrap"><div class="row gutter-xl"><div class="widget-area footer-widgets-1 footer-widget-area col col-xs-12 col-sm-6"><section id="custom_html-2" class="widget_text widget widget_custom_html"><div class="widget_text widget-wrap"><div class="textwidget custom-html-widget">Stran PostneStevilke.com ni povezana s podjetjem Pošta Slovenije d.d. in deluje kot samostojna stran, namenjena informacijam o poštnih številkah Slovenije.</div></div></section>
+</div><div class="widget-area footer-widgets-2 footer-widget-area col col-xs-12 col-sm-6"><section id="custom_html-3" class="widget_text widget widget_custom_html"><div class="widget_text widget-wrap"><h3 class="widgettitle widget-title">Povezave</h3>
+<div class="textwidget custom-html-widget"><a href="https://www.postnestevilke.com/varovanje-zasebnosti">Varovanje zasebnosti</a><br/>
+<a href="https://www.postnestevilke.com/kontakt">Kontakt</a></div></div></section>
+</div></div></div></div><footer class="site-footer text-sm" itemscope="" itemtype="https://schema.org/WPFooter"><div class="wrap"><p>Vse pravice pridržane © 2008–2021 · Poštne številke</p></div></footer></div><link rel="stylesheet" id="su-shortcodes-css" href="https://www.postnestevilke.com/wp-content/plugins/shortcodes-ultimate/includes/css/shortcodes.css?ver=5.10.2" type="text/css" media="all"/>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-includes/js/dist/vendor/regenerator-runtime.min.js?ver=0.13.7" id="regenerator-runtime-js"></script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-includes/js/dist/vendor/wp-polyfill.min.js?ver=3.15.0" id="wp-polyfill-js"></script>
+<script type="text/javascript" id="contact-form-7-js-extra">
+/* <![CDATA[ */
+var wpcf7 = {"api":{"root":"https:\/\/www.postnestevilke.com\/wp-json\/","namespace":"contact-form-7\/v1"},"cached":"1"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-content/plugins/contact-form-7/includes/js/index.js?ver=5.4.2" id="contact-form-7-js"></script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-includes/js/comment-reply.min.js?ver=5.8.1" id="comment-reply-js"></script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-includes/js/hoverIntent.min.js?ver=1.10.1" id="hoverIntent-js"></script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-content/themes/genesis/lib/js/menu/superfish.min.js?ver=1.7.10" id="superfish-js"></script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-content/themes/genesis/lib/js/skip-links.min.js?ver=3.3.5" id="skip-links-js"></script>
+<script type="text/javascript" id="mai-theme-engine-js-extra">
+/* <![CDATA[ */
+var maiVars = {"mainMenu":"Menu","subMenu":"Submenu","searchBox":"<div class=\"search-box\" style=\"display:none;\"><form class=\"search-form\" method=\"get\" action=\"https:\/\/www.postnestevilke.com\/\" role=\"search\" itemprop=\"potentialAction\" itemscope itemtype=\"https:\/\/schema.org\/SearchAction\"><label class=\"search-form-label screen-reader-text\" for=\"searchform-2\">Iskanje...<\/label><input class=\"search-form-input\" type=\"search\" name=\"s\" id=\"searchform-2\" placeholder=\"Iskanje...\" itemprop=\"query-input\"><input class=\"search-form-submit\" type=\"submit\" value=\"Iskanje\"><meta content=\"https:\/\/www.postnestevilke.com\/?s={s}\" itemprop=\"target\"><\/form><\/div>","maiScrollTo":".scroll-to"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-content/plugins/mai-theme-engine/assets/js/mai-theme.min.js?ver=1.12.0" id="mai-theme-engine-js"></script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-content/plugins/mai-theme-engine/assets/js/basic-scroll.min.js?ver=3.0.2" id="basic-scroll-js"></script>
+<script type="text/javascript" id="mai-scroll-js-extra">
+/* <![CDATA[ */
+var maiScroll = {"logoWidth":"200","logoTop":"18","logoBottom":"12","logoShrinkWidth":"120","logoShrinkTop":"4","logoShrinkBottom":"4"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-content/plugins/mai-theme-engine/assets/js/mai-scroll.min.js?ver=1.12.0" id="mai-scroll-js"></script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-content/plugins/mai-theme-engine/assets/js/fitvids.min.js?ver=1.2.0" id="mai-responsive-videos-js"></script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-content/plugins/mai-theme-engine/assets/js/fitvids-init.min.js?ver=1.12.0" id="mai-responsive-video-init-js"></script>
+<script type="text/javascript" id="q2w3_fixed_widget-js-extra">
+/* <![CDATA[ */
+var q2w3_sidebar_options = [{"sidebar":"sidebar","margin_top":10,"margin_bottom":0,"stop_id":"","screen_max_width":0,"screen_max_height":0,"width_inherit":false,"refresh_interval":1500,"window_load_hook":false,"disable_mo_api":false,"widgets":["text-5"]}];
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-content/plugins/q2w3-fixed-widget/js/q2w3-fixed-widget.min.js?ver=5.3.0" id="q2w3_fixed_widget-js"></script>
+<script type="text/javascript" id="ivory-search-scripts-js-extra">
+/* <![CDATA[ */
+var IvorySearchVars = {"is_analytics_enabled":"1"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-content/plugins/add-search-to-menu/public/js/ivory-search.min.js?ver=4.6.6" id="ivory-search-scripts-js"></script>
+<script type="text/javascript" src="https://www.postnestevilke.com/wp-includes/js/wp-embed.min.js?ver=5.8.1" id="wp-embed-js"></script>
+
+
+<script type='text/javascript' style='display:none;' async>
+__ez.queue.addFile('/detroitchicago/edmonton.webp', '/detroitchicago/edmonton.webp?a=a&cb=0&shcb=34', true, ['/detroitchicago/minneapolis.js'], true, false, false, false);
+__ez.queue.addFile('/porpoiseant/jellyfish.webp', '/porpoiseant/jellyfish.webp?a=a&cb=0&shcb=34', false, [], true, false, false, false);
+</script>
+
+<script>var _audins_dom="postnestevilke_com",_audins_did=293264;__ez.queue.addDelayFunc("audins.js","__ez.script.add", "//go.ezoic.net/detroitchicago/audins.js?cb=195-0");</script><noscript><div style="display:none;"><img src="//pixel.quantserve.com/pixel/p-31iz6hfFutd16.gif?labels=Domain.postnestevilke_com,DomainId.293264" border="0" height="1" width="1" alt="Quantcast"/></div></noscript>
+<script type="text/javascript" data-cfasync="false"></script>
+<script>__ez.queue.addFile('/tardisrocinante/vitals.js', '/tardisrocinante/vitals.js?gcb=0&cb=3', false, ['/detroitchicago/minneapolis.js'], true, false, true, false);</script></body></html><!-- Page generated by LiteSpeed Cache 4.4 on 2021-10-15 09:45:21 -->
