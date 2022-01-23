@@ -1,9 +1,9 @@
 # Nepremičnine
 #### Projektna naloga za Programiranje 1.
-Analiziral bom vseh (okoli 5000) hiš, ki se trenutno prodajajo na [NEPREMICNINE.net](https://www.nepremicnine.net/oglasi-prodaja/hisa/) to bodo hiše iz Slovenije in Hrvaške.
+Analiziral bom ponudbo (okoli 5000) hiš, ki se trenutno prodajajo na [NEPREMICNINE.net](https://www.nepremicnine.net/oglasi-prodaja/hisa/) to bodo hiše iz Slovenije in Hrvaške.
 
 
-### Za vsako hišo bom zajel:
+### Za vsako hišo so bile zajete:
 * lokacijo ter državo, kje se hiša nahaja
 * ceno hiše
 * leto gradnje
